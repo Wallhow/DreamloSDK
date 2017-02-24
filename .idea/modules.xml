@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/DreamloSDK.iml" filepath="$PROJECT_DIR$/.idea/modules/DreamloSDK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/DreamloSDK_main.iml" filepath="$PROJECT_DIR$/.idea/modules/DreamloSDK_main.iml" group="DreamloSDK" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/DreamloSDK_test.iml" filepath="$PROJECT_DIR$/.idea/modules/DreamloSDK_test.iml" group="DreamloSDK" />
+    </modules>
+  </component>
+</project>
