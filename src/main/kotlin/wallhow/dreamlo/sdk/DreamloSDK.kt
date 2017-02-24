@@ -7,7 +7,7 @@ import org.apache.http.impl.client.BasicResponseHandler
 import org.apache.http.impl.client.DefaultHttpClient
 import wallhow.dreamlo.sdk.achievements.Achievements
 import wallhow.dreamlo.sdk.admin.AdminService
-import wallhow.dreamlo.sdk.leaderboard.Leaderboard
+import wallhow.dreamlo.sdk.leaderboard.LeaderboardOffline
 import java.net.URI
 
 /**
@@ -15,7 +15,7 @@ import java.net.URI
  */
 
 class DreamloSDK(private val publicKey: String,private val privateKey: String) {
-    val leaderboard = Leaderboard()
+    val leaderboard = LeaderboardOffline()
     val achievemts = Achievements()
     val admin = AdminService()
 

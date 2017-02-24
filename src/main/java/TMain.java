@@ -2,6 +2,8 @@
 import wallhow.dreamlo.sdk.DreamloSDK;
 import wallhow.dreamlo.sdk.achievements.Achievement;
 
+import java.lang.reflect.Array;
+
 /**
  * Created by wallhow on 23.02.17.
  */
@@ -10,11 +12,9 @@ public class TMain {
         DreamloSDK dreamloSDK = new DreamloSDK("",
                 "");
 
-        dreamloSDK.getAchievemts().set("lol", true);
-        dreamloSDK.getAchievemts().set("lol3", false);
-        dreamloSDK.getAchievemts().set("Job", true);
 
-        for (Achievement achievement : dreamloSDK.getAchievemts().list()) {
+        Achievement[] arr = dreamloSDK.getAchievemts().list();
+        for (Achievement achievement : arr) {
             System.out.println(achievement);
         }
     }

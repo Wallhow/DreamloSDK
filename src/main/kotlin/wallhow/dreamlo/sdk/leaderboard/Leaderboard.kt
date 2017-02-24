@@ -1,5 +1,6 @@
 package wallhow.dreamlo.sdk.leaderboard
 
+import com.google.gson.reflect.TypeToken
 import wallhow.dreamlo.sdk.DreamloSDK
 import wallhow.dreamlo.sdk.utils.User
 import java.util.*
@@ -7,20 +8,20 @@ import java.util.*
 /**
  * Created by wallhow on 23.02.17.
  */
-class Leaderboard {
-    private val mapUsers = ArrayList<Pair<String, User>>()
+class Leaderboard : ILeaderboard {
+    private val mapUsers =  ArrayList<Pair<String, User>>()
     private val userNotFound = User().apply { name = User.NOT_FOUND }
 
     var update = true
 
-    fun setScore(name: String, score: Int) {
+    override fun setScore(name: String, score: Int) {
         if(name == DreamloSDK.KEY_WORD) {
             throw Exception("Вы используете зарезервированное имя ${DreamloSDK.KEY_WORD}, которое нельзя использовать")
         }
         DreamloSDK.privateExecute("add/$name/$score")
         update = true
     }
-    fun setUser(user: User) {
+    override fun setUser(user: User) {
         if(user.name == DreamloSDK.KEY_WORD) {
             throw Exception("Вы используете зарезервированное имя ${DreamloSDK.KEY_WORD}, которое нельзя использовать")
         }
@@ -28,13 +29,21 @@ class Leaderboard {
         update = true
     }
 
-    fun getUsers() : Array<User>? {
+    override fun getAllUsers() : Array<User>? {
         if(update) {
             updateUserBase()
         }
-        return Array(mapUsers.size) { mapUsers[it].second }
+        return mapUsers.filter { it.second.name!=DreamloSDK.KEY_WORD }.map { it.second }.toTypedArray()
     }
-    fun getUser(name: String) : User {
+    override fun getTopUsers(top: Int) : Array<User> {
+        val array = DreamloSDK.publicExecute(("pipe-get/$top")).split("\n").filter { it!="" }
+        return array.filter { !it.contains(DreamloSDK.KEY_WORD) }.map { User.create(it, "|") }.toTypedArray()
+    }
+    override fun getUsers(firstIndex : Int, countUser : Int) : Array<User> {
+        val array = DreamloSDK.publicExecute(("pipe-get/$firstIndex/${countUser-1}")).split("\n").filter { it!="" }
+        return array.filter { !it.contains(DreamloSDK.KEY_WORD) }.map { User.create(it, "|") }.toTypedArray()
+    }
+    override fun getUser(name: String) : User {
         if(update) updateUserBase()
         if(name == DreamloSDK.KEY_WORD) {
             throw Exception("Вы используете зарезервированное имя ${DreamloSDK.KEY_WORD}, которое нельзя использовать")
@@ -43,7 +52,7 @@ class Leaderboard {
         return mapUsers.firstOrNull { it.first.contains(name) }?.second ?: userNotFound
     }
 
-    fun getScore(name: String) : Int = getUser(name).score
+    override fun getScore(name: String) : Int = getUser(name).score
 
     private fun updateUserBase() {
         mapUsers.clear()
@@ -53,5 +62,15 @@ class Leaderboard {
             mapUsers.add(Pair(usr.name,usr))
             usr }
         update = false
+    }
+
+    private val type = object : TypeToken<HashMap<String,User>>(){}.type
+    override fun fromJson(json: String) : HashMap<String,User> {
+        return DreamloSDK.gson.fromJson(json,type)
+    }
+    override fun getJson() : String {
+        val hmap = HashMap<String,User>()
+        getAllUsers()?.forEach { hmap.put(it.name,it) }
+        return DreamloSDK.gson.toJson(hmap)
     }
 }

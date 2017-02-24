@@ -14,7 +14,7 @@ class Achievements {
     @SerializedName("achievements")
     private var achives = ArrayList<Achievement>()
     private var update = true
-    private var list : MutableCollection<Achievement>? = null
+    private var list : Array<Achievement>? = null
     private var notFound = Achievement().apply { key = Achievement.NOT_FOUND }
     private val type = object : TypeToken<ArrayList<Achievement>>(){}.type
 
@@ -34,10 +34,9 @@ class Achievements {
             achive.apply { this.isOpen = isOpen}
         write()
     }
-    fun list() : MutableCollection<Achievement>? {
+    fun list() : Array<Achievement>? {
         if(update) {
             updateBase()
-            list = achives
         }
         return list
     }
@@ -58,6 +57,7 @@ class Achievements {
         val encodeJson = User.create(userPipe,"|").text.toByteArray()
         achives = DreamloSDK.gson.fromJson(
                 Base64.getDecoder().decode(encodeJson).toString(Charsets.UTF_8), type)
+        list = achives.toTypedArray()
     }
 }
 

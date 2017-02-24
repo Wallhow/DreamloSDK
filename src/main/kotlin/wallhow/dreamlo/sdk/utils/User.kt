@@ -1,6 +1,6 @@
 package wallhow.dreamlo.sdk.utils
 
-class User {
+class User : Comparable<User> {
     var name : String = ""
     var score : Int = 0
     var seconds : Int = 0
@@ -26,5 +26,10 @@ class User {
             return user
         }
         val NOT_FOUND = "UserNotFound"
+    }
+    override fun compareTo(other: User): Int {
+        if(other.score < score) return -1
+        else if(other.score > score) return 1
+        else return 0
     }
 }
