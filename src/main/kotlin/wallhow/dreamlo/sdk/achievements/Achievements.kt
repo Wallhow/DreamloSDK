@@ -42,13 +42,16 @@ class Achievements {
         return list
     }
 
+    fun getJson() : String {
+        return DreamloSDK.gson.toJson(list())
+    }
+
     private fun write() {
         update = true
         DreamloSDK.privateExecute("add/${DreamloSDK.KEY_WORD}/0/0/${
         Base64.getEncoder().encode((DreamloSDK.gson.toJson(achives)).toByteArray()).toString(Charsets.UTF_8)
         }")
     }
-
     private fun updateBase() {
         update = false
         val userPipe = DreamloSDK.publicExecute("pipe-get/${DreamloSDK.KEY_WORD}")
